@@ -33,8 +33,8 @@ export async function POST(req: NextRequest) {
     return new Response(JSON.stringify({ url: data.data[0].url }), { status: 200 });
   } catch (error: unknown) {
     let errorMessage = 'Unknown error';
-    if (error && typeof error === 'object' && 'message' in error && typeof (error as any).message === 'string') {
-      errorMessage = (error as any).message;
+    if (error && typeof error === 'object' && 'message' in error && typeof (error as unknown & { message?: unknown }).message === 'string') {
+      errorMessage = (error as unknown & { message?: string }).message as string;
     }
     return new Response(JSON.stringify({ error: errorMessage }), { status: 500 });
   }

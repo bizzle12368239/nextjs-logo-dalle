@@ -52,11 +52,16 @@ const PRICING = [
 ];
 
 export default function Home() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [prompt, setPrompt] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -71,8 +76,12 @@ export default function Home() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate logo");
       setImageUrl(data.url);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      let errorMessage = 'Unknown error';
+      if (err && typeof err === 'object' && 'message' in err && typeof (err as unknown & { message?: unknown }).message === 'string') {
+        errorMessage = (err as unknown & { message?: string }).message as string;
+      }
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

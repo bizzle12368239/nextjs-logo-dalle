@@ -24,8 +24,8 @@ export default function LogoApp() {
       setImageUrl(data.url);
     } catch (err: unknown) {
       let errorMessage = 'Unknown error';
-      if (err && typeof err === 'object' && 'message' in err && typeof (err as any).message === 'string') {
-        errorMessage = (err as any).message;
+      if (err && typeof err === 'object' && 'message' in err && typeof (err as unknown & { message?: unknown }).message === 'string') {
+        errorMessage = (err as unknown & { message?: string }).message as string;
       }
       setError(errorMessage);
     } finally {
