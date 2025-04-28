@@ -1,29 +1,26 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 // Modern SVG Logo Component
 function ModernLogo() {
   return (
     <div className="flex justify-center items-center mb-6">
       <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-lg">
-        <rect x="4" y="4" width="48" height="48" rx="16" fill="url(#paint0_linear)" />
+        <rect x="4" y="4" width="48" height="48" rx="16" fill="#FAFAFA" />
         <path d="M18 28C18 22.4772 22.4772 18 28 18C33.5228 18 38 22.4772 38 28C38 33.5228 33.5228 38 28 38C22.4772 38 18 33.5228 18 28Z" fill="#fff" fillOpacity="0.85"/>
-        <path d="M28 22V34" stroke="#6366F1" strokeWidth="2.5" strokeLinecap="round"/>
-        <path d="M22 28H34" stroke="#6366F1" strokeWidth="2.5" strokeLinecap="round"/>
-        <defs>
-          <linearGradient id="paint0_linear" x1="4" y1="4" x2="52" y2="52" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#6366F1"/>
-            <stop offset="1" stopColor="#06B6D4"/>
-          </linearGradient>
-        </defs>
+        <path d="M28 22V34" stroke="#222" strokeWidth="2.5" strokeLinecap="round"/>
+        <path d="M22 28H34" stroke="#222" strokeWidth="2.5" strokeLinecap="round"/>
       </svg>
-      <span className="ml-3 text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-cyan-400 tracking-tight select-none" style={{letterSpacing: '0.05em'}}>LogoGen</span>
+      <span className="ml-3 text-3xl font-extrabold text-black tracking-tight select-none font-sans" style={{letterSpacing: '0.05em'}}>LogoGen</span>
     </div>
   );
 }
 
 export default function LogoApp() {
+  const router = useRouter();
+
   const [tab, setTab] = useState<'generate' | 'history'>('generate');
   const [prompt, setPrompt] = useState("");
   const [style, setStyle] = useState("Modern");
@@ -119,13 +116,22 @@ export default function LogoApp() {
   );
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-blue-50 p-0 md:p-6 font-sans">
-      <div className="w-full max-w-md bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-6 md:p-10 mt-4 mb-8 border border-gray-200 relative">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 font-sans">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-card p-8 md:p-10 border border-gray-200 relative">
         <ModernLogo />
+        {/* Onboarding Link */}
+        <div className="absolute top-4 right-4">
+          <a
+            href="/app/onboarding"
+            className="text-xs text-gray-500 underline hover:text-black font-sans transition"
+          >
+            Onboarding
+          </a>
+        </div>
         {/* Tab Switcher */}
         <div className="flex justify-center gap-2 mb-6">
-          <button onClick={() => setTab('generate')} className={`px-5 py-2 rounded-full font-semibold transition shadow-sm ${tab==='generate' ? 'bg-gradient-to-r from-indigo-600 to-cyan-400 text-white scale-105' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}>Generate</button>
-          <button onClick={() => setTab('history')} className={`px-5 py-2 rounded-full font-semibold transition shadow-sm ${tab==='history' ? 'bg-gradient-to-r from-indigo-600 to-cyan-400 text-white scale-105' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}>History</button>
+          <button onClick={() => setTab('generate')} className={`px-5 py-2 rounded-full font-semibold transition shadow-card border border-gray-200 ${tab==='generate' ? 'bg-background text-black scale-105' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>Generate</button>
+          <button onClick={() => setTab('history')} className={`px-5 py-2 rounded-full font-semibold transition shadow-card border border-gray-200 ${tab==='history' ? 'bg-background text-black scale-105' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>History</button>
         </div>
         {/* Tab Content */}
         {tab === 'generate' && (
@@ -133,7 +139,7 @@ export default function LogoApp() {
             {styleTweaks}
             <input
               type="text"
-              className="border rounded-xl p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-cyan-400 text-base"
+              className="border border-gray-300 rounded-xl p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black text-base text-black placeholder-gray-400 font-sans"
               placeholder="Describe your logo (e.g. 'Minimal tech logo with blue gradient')"
               value={prompt}
               onChange={e => setPrompt(e.target.value)}
@@ -142,25 +148,25 @@ export default function LogoApp() {
             />
             <button
               type="submit"
-              className="bg-gradient-to-r from-indigo-600 to-cyan-400 text-white py-3 rounded-xl font-bold text-lg shadow-lg hover:from-indigo-700 hover:to-cyan-500 transition disabled:opacity-60"
+              className="bg-black text-white py-3 rounded-xl font-bold text-lg shadow-card hover:bg-gray-900 transition disabled:opacity-60 font-sans"
               disabled={loading || !prompt}
             >
               {loading ? "Generating..." : "Generate Logo"}
             </button>
-            {error && <div className="mt-2 text-red-600 text-center">{error}</div>}
+            {error && <div className="mt-2 text-red-600 text-center font-sans">{error}</div>}
             {imageUrl && (
               <div className="mt-6 flex flex-col items-center animate-fade-in">
                 <img
                   src={imageUrl}
                   alt="Generated logo"
-                  className="w-48 h-48 object-contain border rounded-xl shadow-lg bg-white/70"
+                  className="w-48 h-48 object-contain border rounded-xl shadow-card bg-white"
                   style={{backdropFilter: 'blur(8px)'}}
                 />
                 <a
                   href={imageUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 text-cyan-600 underline text-sm"
+                  className="mt-2 text-black underline text-sm font-sans"
                 >
                   Open Full Image
                 </a>
@@ -170,22 +176,22 @@ export default function LogoApp() {
         )}
         {tab === 'history' && (
           <div className="flex flex-col gap-4 animate-fade-in max-h-[32rem] overflow-y-auto pr-1">
-            {history.length === 0 && <div className="text-gray-400 text-center py-8">No history yet. Generate a logo to see it here!</div>}
+            {history.length === 0 && <div className="text-gray-400 text-center py-8 font-sans">No history yet. Generate a logo to see it here!</div>}
             {history.map((item, idx) => (
-              <div key={idx} className="flex gap-4 items-center bg-white/90 rounded-xl shadow p-3 mb-1 border border-gray-100">
+              <div key={idx} className="flex gap-4 items-center bg-white rounded-xl shadow-card p-3 mb-1 border border-gray-100">
                 <img src={item.url} alt="History logo" className="w-16 h-16 object-contain rounded-lg border" />
                 <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-gray-700 truncate">{item.prompt}</div>
-                  <div className="text-xs text-gray-400 mt-1">{item.style}, {item.palette}, {item.aspect}</div>
-                  <div className="text-xs text-gray-400">{item.date}</div>
+                  <div className="font-semibold text-black truncate font-sans">{item.prompt}</div>
+                  <div className="text-xs text-gray-400 mt-1 font-sans">{item.style}, {item.palette}, {item.aspect}</div>
+                  <div className="text-xs text-gray-400 font-sans">{item.date}</div>
                 </div>
-                <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-cyan-600 underline text-xs ml-2">View</a>
+                <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-black underline text-xs ml-2 font-sans">View</a>
               </div>
             ))}
           </div>
         )}
       </div>
-      <footer className="w-full py-6 text-center text-gray-400 text-xs select-none">
+      <footer className="w-full py-6 text-center text-gray-400 text-xs select-none font-sans">
         &copy; {new Date().getFullYear()} LogoGen. All rights reserved.
       </footer>
     </main>
