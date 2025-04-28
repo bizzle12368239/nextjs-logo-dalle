@@ -31,7 +31,11 @@ export async function POST(req: NextRequest) {
     }
     const data = await dalleRes.json();
     return new Response(JSON.stringify({ url: data.data[0].url }), { status: 200 });
-  } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+  } catch (error: unknown) {
+    let errorMessage = 'Unknown error';
+    if (error && typeof error === 'object' && 'message' in error && typeof (error as any).message === 'string') {
+      errorMessage = (error as any).message;
+    }
+    return new Response(JSON.stringify({ error: errorMessage }), { status: 500 });
   }
 }

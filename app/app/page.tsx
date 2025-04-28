@@ -22,8 +22,12 @@ export default function LogoApp() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate logo");
       setImageUrl(data.url);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      let errorMessage = 'Unknown error';
+      if (err && typeof err === 'object' && 'message' in err && typeof (err as any).message === 'string') {
+        errorMessage = (err as any).message;
+      }
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
